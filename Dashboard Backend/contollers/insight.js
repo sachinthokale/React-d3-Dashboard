@@ -17,3 +17,21 @@ export const insertJsonData = async (req, res) => {
       .json({ error: `Error inserting documents: ${error.message}` });
   }
 };
+
+export const getAllData = async (req, res) => {
+  try {
+    const data = await Insight.find();
+    if (!data) {
+      return res.status(400).json({
+        message: "error while fetching data",
+      });
+    } else {
+      return res.status(200).json({
+        message: "data fetch successfully",
+        data: data,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
