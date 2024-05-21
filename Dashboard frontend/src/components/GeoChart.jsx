@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { geoMercator, geoPath, select, json, min, max, scaleLinear } from "d3";
+import { MyContext } from "./Context";
 
 const useResizeObserver = (ref) => {
   const [dimensions, setDimensions] = useState(null);
@@ -20,14 +21,14 @@ const useResizeObserver = (ref) => {
 };
 
 // eslint-disable-next-line react/prop-types
-const GeoChart = ({ data }) => {
+const GeoChart = ({ data, selectedOption }) => {
+  const { filterContextData } = useContext(MyContext);
   const svgRef = useRef(null);
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
   const svgWidth = 400;
   const svgHeight = 400;
   const [worldData, setWorldData] = useState();
-  const [selectedOption, setSelectedOption] = useState("intensity");
 
   useEffect(() => {
     // Load world map data
@@ -38,7 +39,9 @@ const GeoChart = ({ data }) => {
       worldData.features.forEach((feature) => {
         const { name } = feature.properties;
         // eslint-disable-next-line react/prop-types
-        const customData = data.find((item) => item.country === name);
+        const customData = filterContextData.find(
+          (item) => item.country === name
+        );
 
         if (customData) {
           feature.properties.intensity = customData.intensity;
@@ -53,7 +56,7 @@ const GeoChart = ({ data }) => {
       });
       setWorldData(worldData);
     });
-  }, [data]);
+  }, [filterContextData]);
 
   useEffect(() => {
     if (!worldData) return;
@@ -100,60 +103,9 @@ const GeoChart = ({ data }) => {
     <>
       <div
         ref={wrapperRef}
-        className=" border-l border-gray-600 w-full h-full flex justify-center items-center bg-[#022B3A] "
+        className=" w-full h-full flex justify-center items-center bg-[#022B3A] "
       >
         <svg className="w-full h-full" ref={svgRef}></svg>
-      </div>
-      <div className="mb-4  flex flex-col ">
-        <label className="mr-2  text-[#ff0054] text-md font-bold flex  items-center w-full">
-          <div
-            className={`w-3 h-3 border border-[#ff0054] rounded-sm mr-2 ${
-              selectedOption == "intensity" ? "bg-[#ff0054]" : null
-            }`}
-          ></div>
-          <input
-            className=" appearance-none"
-            type="radio"
-            name="dataOption"
-            value="intensity"
-            checked={selectedOption === "intensity"}
-            onChange={(e) => setSelectedOption(e.target.value)}
-          />
-          Intensity
-        </label>
-
-        <label className="mr-2  text-[#fca311] text-md font-bold flex  items-center w-full">
-          <div
-            className={`w-3 h-3 border border-[#fca311] rounded-sm mr-2 ${
-              selectedOption == "likelihood" ? "bg-[#fca311]" : null
-            }`}
-          ></div>
-          <input
-            className=" appearance-none"
-            type="radio"
-            name="dataOption"
-            value="likelihood"
-            checked={selectedOption === "likelihood"}
-            onChange={(e) => setSelectedOption(e.target.value)}
-          />
-          Likelihood
-        </label>
-        <label className="mr-2  text-[#00f5d4] text-md font-bold flex items-center w-full">
-          <div
-            className={`w-3 h-3 border border-[#00f5d4] rounded-sm mr-2 ${
-              selectedOption == "relevance" ? "bg-[#00f5d4]" : null
-            }`}
-          ></div>
-          <input
-            className=" appearance-none"
-            type="radio"
-            name="dataOption"
-            value="relevance"
-            checked={selectedOption === "relevance"}
-            onChange={(e) => setSelectedOption(e.target.value)}
-          />
-          Relevance
-        </label>
       </div>
     </>
   );
