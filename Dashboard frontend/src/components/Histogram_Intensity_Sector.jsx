@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { select, axisBottom, axisLeft, scaleLinear, scaleBand, max } from "d3";
+import { MyContext } from "./Context";
 
 const useResizeObserver = (ref) => {
   const [dimensions, setDimensions] = useState(null);
@@ -21,6 +22,7 @@ const useResizeObserver = (ref) => {
 
 // eslint-disable-next-line react/prop-types
 const Histogram_Intensity_Sector = ({ data }) => {
+  const { filterContextData } = useContext(MyContext);
   const svgRef = useRef(null);
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
@@ -28,20 +30,20 @@ const Histogram_Intensity_Sector = ({ data }) => {
   const margin = { top: 20, right: 30, bottom: 20, left: 110 };
 
   useEffect(() => {
-    const svg = select(svgRef.current)
-      .style("background-color", "#022B3A")
-      .style("overflow", "visible");
+    const svg = select(svgRef.current);
+    svg.selectAll("*").remove();
+    svg.style("background-color", "#022B3A").style("overflow", "visible");
     if (!dimensions) return;
 
     // Define the xScale and yScale
     const xScale = scaleLinear()
-      .domain([0, max(data, (d) => d.intensity)])
+      .domain([0, max(filterContextData, (d) => d.intensity)])
       .nice()
       .range([margin.left, dimensions.width - margin.right]);
 
     const yScale = scaleBand()
       // eslint-disable-next-line react/prop-types
-      .domain(data.map((d) => d.sector))
+      .domain(filterContextData.map((d) => d.sector))
       .range([margin.top, dimensions.height - margin.bottom])
       .padding(0.4);
 
@@ -66,7 +68,7 @@ const Histogram_Intensity_Sector = ({ data }) => {
     // Append bars with color based on intensity
     svg
       .selectAll(".bar")
-      .data(data)
+      .data(filterContextData)
       .enter()
       .append("rect")
       .attr("class", "bar")
@@ -84,7 +86,7 @@ const Histogram_Intensity_Sector = ({ data }) => {
           return "#ff0054";
         }
       });
-  }, [data, dimensions]);
+  }, [data, dimensions, filterContextData]);
 
   return (
     <div ref={wrapperRef} className="flex w-full h-full">
