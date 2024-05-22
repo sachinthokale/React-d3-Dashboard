@@ -21,13 +21,12 @@ const useResizeObserver = (ref) => {
 };
 
 // eslint-disable-next-line react/prop-types
-const GeoChart = ({ data, selectedOption }) => {
+const GeoChart = ({ selectedOption }) => {
   const { filterContextData } = useContext(MyContext);
   const svgRef = useRef(null);
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
-  const svgWidth = 400;
-  const svgHeight = 400;
+
   const [worldData, setWorldData] = useState();
 
   useEffect(() => {
@@ -62,6 +61,7 @@ const GeoChart = ({ data, selectedOption }) => {
     if (!worldData) return;
 
     const svg = select(svgRef.current).style("background-color", "#022B3A");
+    svg.selectAll("*").remove();
 
     const minValue = min(
       worldData.features,

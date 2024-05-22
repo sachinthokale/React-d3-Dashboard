@@ -9,7 +9,8 @@ import SideDrawer from "./components/SideDrawer";
 import RecentEvent from "./components/RecentEvent";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { MyContext, MyProvider } from "./components/Context";
+import { MyContext } from "./components/Context";
+import TopicFrequency from "./components/TopicFrequency";
 
 const App = () => {
   const { filterContextData } = useContext(MyContext);
@@ -72,7 +73,7 @@ const App = () => {
     <div className=" w-screen h-screen flex">
       <SideDrawer />
 
-      <div className="flex flex-col md:flex-col w-5/6 h-screen bg-[#022B3A]">
+      <div className="flex flex-col md:flex-col w-[85%] h-screen bg-[#022B3A]">
         <Carousel
           style={{ boxShadow: "black 0px 2px 8px" }}
           responsive={responsive}
@@ -85,13 +86,18 @@ const App = () => {
             );
           })}
         </Carousel>
-        <div className="w-full h-full flex  ">
-          <div className="w-full h-full md:h-3/5 flex flex-col md:flex-row border border-white ">
+        <div className="w-full h-full flex flex-col ">
+          <div className="w-full h-full md:h-3/5 flex flex-col md:flex-row ">
             <div
               style={{ boxShadow: "black 0px 2px 8px" }}
               className=" w-full md:w-1/3 m-2 p-2"
             >
-              <Histogram_Intensity_Sector data={wholeData} />
+              <div className=" text-[#00f5d4] font-bold text-sm h-8 flex justify-center items-center">
+                <p>Distribution of Intensity Across Different Sectors</p>
+              </div>
+              <div className="e h-5/6">
+                <Histogram_Intensity_Sector />
+              </div>
             </div>
             <div
               style={{ boxShadow: "black 0px 2px 8px" }}
@@ -149,18 +155,23 @@ const App = () => {
                 </label>
               </div>
               <div className=" w-full h-5/6">
-                <GeoChart data={wholeData} selectedOption={selectedOption} />
+                <GeoChart selectedOption={selectedOption} />
               </div>
             </div>
             <div
               style={{ boxShadow: "black 0px 2px 8px" }}
               className=" w-full  md:w-1/3 m-2"
             >
-              <div className="w-full h-5 border border-white"></div>
+              <div className=" text-[#fca311] font-bold text-sm h-8 flex justify-center items-center">
+                <p>Count of Topics by Pestle Category</p>
+              </div>
               <div className=" w-full h-5/6">
-                <PieChart data={wholeData} />
+                <PieChart />
               </div>
             </div>
+          </div>
+          <div className=" w-full h-2/5">
+            <TopicFrequency />
           </div>
         </div>
       </div>

@@ -1,15 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -25,6 +19,7 @@ const SideDrawer = () => {
   const [sectors, setSectors] = useState([]);
   const [regions, setRegions] = useState([]);
   const [pestles, setPestles] = useState([]);
+  const [sources, setSources] = useState([]);
   const [filters, setFilters] = useState({
     endYear: "",
     topic: "",
@@ -64,6 +59,11 @@ const SideDrawer = () => {
         ...new Set(response.data.data.map((item) => item.pestle)),
       ];
       setPestles(uniquePestles);
+
+      const uniqueSources = [
+        ...new Set(response.data.data.map((item) => item.source)),
+      ];
+      setSources(uniqueSources);
     };
     fetchData();
   }, []);
@@ -109,6 +109,11 @@ const SideDrawer = () => {
         (item) => item.pestle === updatedFilters.pestle
       );
     }
+    if (updatedFilters.source) {
+      filtered = filtered.filter(
+        (item) => item.source === updatedFilters.source
+      );
+    }
 
     // Add more filter conditions here as needed
 
@@ -124,19 +129,38 @@ const SideDrawer = () => {
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
-          border: "1px solid black",
+          borderRight: "5px solid gray",
+          backgroundColor: "#022B3A",
+          color: "white",
         },
       }}
       variant="permanent"
       anchor="left"
     >
-      <Toolbar />
+      <div className=" h-14 flex ml-3 items-center">
+        <h1 className="text-3xl font-bold">Dashboard</h1>
+      </div>
+      <div className=" h-14 flex  items-center">
+        <h1 className="text-md font-bold ml-3">Dashboard filters</h1>
+      </div>
+
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemText primary={"Filter by End Year"} />
+          <ListItemButton
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <ListItemText primary={" End Year"} style={{ width: "100%" }} />
             <Select
+              style={{
+                width: "100%",
+                height: "40px",
+                color: "white",
+                border: "1px solid gray",
+              }}
               value={filters.endYear}
               name="endYear"
               onChange={handleFilterChange}
@@ -159,9 +183,20 @@ const SideDrawer = () => {
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemText primary={"Filter by Topic"} />
+          <ListItemButton
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <ListItemText primary={" Topic"} style={{ width: "100%" }} />
             <Select
+              style={{
+                width: "100%",
+                height: "40px",
+                color: "white",
+                border: "1px solid gray",
+              }}
               value={filters.topic}
               name="topic"
               onChange={handleFilterChange}
@@ -180,9 +215,20 @@ const SideDrawer = () => {
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemText primary={"Filter by Sectors"} />
+          <ListItemButton
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <ListItemText primary={" Sectors"} style={{ width: "100%" }} />
             <Select
+              style={{
+                width: "100%",
+                height: "40px",
+                color: "white",
+                border: "1px solid gray",
+              }}
               value={filters.sector}
               name="sector"
               onChange={handleFilterChange}
@@ -201,9 +247,20 @@ const SideDrawer = () => {
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemText primary={"Filter by Regions"} />
+          <ListItemButton
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <ListItemText primary={" Regions"} style={{ width: "100%" }} />
             <Select
+              style={{
+                width: "100%",
+                height: "40px",
+                color: "white",
+                border: "1px solid gray",
+              }}
               value={filters.region}
               name="region"
               onChange={handleFilterChange}
@@ -222,9 +279,20 @@ const SideDrawer = () => {
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemText primary={"Filter by Pestles"} />
+          <ListItemButton
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <ListItemText primary={" Pestles"} style={{ width: "100%" }} />
             <Select
+              style={{
+                width: "100%",
+                height: "40px",
+                color: "white",
+                border: "1px solid gray",
+              }}
               value={filters.pestle}
               name="pestle"
               onChange={handleFilterChange}
@@ -236,6 +304,38 @@ const SideDrawer = () => {
               {pestles.map((pestle) => (
                 <MenuItem key={pestle} value={pestle}>
                   {pestle}
+                </MenuItem>
+              ))}
+            </Select>
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <ListItemText primary={" Sources"} style={{ width: "100%" }} />
+            <Select
+              value={filters.source}
+              name="source"
+              onChange={handleFilterChange}
+              displayEmpty
+              style={{
+                width: "100%",
+                height: "40px",
+                color: "white",
+                border: "1px solid gray",
+              }}
+            >
+              <MenuItem value="">
+                <em>All</em>
+              </MenuItem>
+              {sources.map((source) => (
+                <MenuItem key={source} value={source}>
+                  {source}
                 </MenuItem>
               ))}
             </Select>
