@@ -34,7 +34,9 @@ const SideDrawer = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get("http://localhost:5000/api/getdata");
+      const response = await axios.get(
+        "https://react-d3-dashboard-backend.onrender.com/api/getdata"
+      );
       setWholeData(response.data.data);
       setFilterContextData(response.data.data);
       console.log("in side");

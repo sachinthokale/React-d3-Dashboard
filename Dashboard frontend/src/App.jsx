@@ -58,7 +58,9 @@ const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get("http://localhost:5000/api/getdata");
+      const response = await axios.get(
+        "https://react-d3-dashboard-backend.onrender.com/api/getdata"
+      );
       // console.log(response.data.data);
       setWholeData(response.data.data);
     };
