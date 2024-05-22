@@ -21,13 +21,13 @@ const useResizeObserver = (ref) => {
 };
 
 // eslint-disable-next-line react/prop-types
-const PieChart = ({ data }) => {
+const PieChart = () => {
   const { filterContextData } = useContext(MyContext);
   const svgRef = useRef();
   const wrapperRef = useRef();
   const dimensions = useResizeObserver(wrapperRef);
   const [datas, setDatas] = useState([]);
-  const [pieColor, setPieColor] = useState("#ff0054");
+  const [pieColor] = useState("#ff0054");
 
   const countTopics = (data) => {
     const topicCounts = {};
@@ -84,33 +84,77 @@ const PieChart = ({ data }) => {
       .attr("stroke-width", 5)
       .attr("transform", `translate(${radius}, ${radius})`)
       .on("mouseover", (event, d) => {
-        // Show text when hovering over the arc
+        const [x, y] = arc.centroid(d);
+
+        // Append rectangle for the text background
+        const rect = svg
+          .append("rect")
+          .attr("class", "tooltip-rect")
+          .attr("x", 210)
+          .attr("y", 40)
+          .attr("width", 140)
+          .attr("height", 100)
+          .attr("fill", "none");
+
+        // Append text
         svg
           .append("text")
           .attr("class", "tooltip")
+          .attr("x", 240)
+          .attr("y", 60)
           .attr("text-anchor", "middle")
-          .style("color", "white")
-          .attr(
-            "transform",
-            `translate(${arc.centroid(d)}) translate(${radius}, ${radius}) `
-          )
-          .text(d.data.label);
+          .attr("dominant-baseline", "middle")
+
+          .text(`Pestle`)
+          .attr("fill", "white");
+
+        svg
+          .append("text")
+          .attr("class", "tooltip")
+          .attr("x", 270)
+          .attr("y", 86)
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "middle")
+          .text(d.data.label)
+          .attr("fill", "#fca311")
+          .style("font-size", "25px");
+
+        svg
+          .append("text")
+          .attr("class", "tooltip")
+          .attr("x", 260)
+          .attr("y", 106)
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "middle")
+
+          .text(`Occurances`)
+          .attr("fill", "white");
+
+        svg
+          .append("text")
+          .attr("class", "tooltip")
+          .attr("x", 240)
+          .attr("y", 130)
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "middle")
+          .text(d.data.value)
+          .attr("fill", "#00f5d4")
+          .style("font-size", "30px");
       })
       .on("mouseout", () => {
-        // Remove the text when mouse moves away from the arc
+        // Remove the text and rect when mouse moves away from the arc
         svg.selectAll(".tooltip").remove();
+        svg.selectAll(".tooltip-rect").remove();
       });
   }, [pieColor, dimensions, datas, filterContextData]);
 
   return (
-    <>
-      <div
-        ref={wrapperRef}
-        className=" pl-1 w-full h-full  flex  justify-center  bg-[#022B3A] "
-      >
-        <svg className="w-full h-full" ref={svgRef}></svg>
-      </div>
-    </>
+    <div
+      ref={wrapperRef}
+      className="pl-1 w-full h-full flex justify-center bg-[#022B3A]"
+    >
+      <svg className="w-full h-full" ref={svgRef}></svg>
+    </div>
   );
 };
 

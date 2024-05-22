@@ -1,5 +1,5 @@
-import { Typography } from "@mui/material";
-import React from "react";
+/* eslint-disable react/prop-types */
+import LinkIcon from "@mui/icons-material/Link";
 
 const RecentEvent = ({ event, colorClass }) => {
   return (
@@ -17,17 +17,25 @@ const RecentEvent = ({ event, colorClass }) => {
           <p className="text-md font-bold w-11/12">{event.topic}</p>
         </div>
         <div className="flex w-full">
-          <p className="w-20 text-sm">Source</p>
-          <p className="text-md font-bold w-11/12">{event.source}</p>
+          <p className="w-20 text-sm">Sector</p>
+          <p className="text-md font-bold w-11/12">{event.sector}</p>
         </div>
-        <div className="flex w-full">
-          <p className="w-20 text-sm">published</p>
-          {/* <p className="text-md font-bold w-11/12">
-            {event.published.split(" ")[0] +
-              event.published.split(" ")[1] +
-              " " +
-              event.published.split(" ")[2]}
-          </p> */}
+        <div className="flex w-full ">
+          <div className="flex borderw-1/2 items-center">
+            <p className="w-20 text-sm">Start Year</p>
+            <p className="text-md font-bold ">{event.start_year}</p>
+          </div>
+          <div className="flex w-1/2 items-center ml-20">
+            <p className="w-20 text-sm">End Year</p>
+            <p className="text-md font-bold ">{event.end_year}</p>
+          </div>
+        </div>
+        <div className="flex w-full ">
+          <p className="w-20 text-sm">Source</p>
+          <a target="blank" href={`${event.url}`} className="flex  w-11/12">
+            <p className="text-md font-bold mr-1">{event.source}</p>
+            <LinkIcon />
+          </a>
         </div>
       </div>
     </div>
